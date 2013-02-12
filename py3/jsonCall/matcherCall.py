@@ -38,11 +38,6 @@ if __name__ == "__main__":
     data = {'ontologies': [], 'type':'addition', 'fields':generateWidget(ug, names)}    
     printf(jsonCall('POST', base+id, data))
     printf(jsonCall('GET', base+id))
-  #names = {'flow':'kind', 'semanticType':'semanticType', 'ID':'uri', 'syntacticType':'type'}
-  #for i in range(10):
-  #  data = {'ontologies': [], 'oldFields':[], 'newFields':generateWidget(ug, names)}
-  #  printf(jsonCall('POST', base+id, data))
-  #  printf(jsonCall('GET', base+id))
     
     
   
