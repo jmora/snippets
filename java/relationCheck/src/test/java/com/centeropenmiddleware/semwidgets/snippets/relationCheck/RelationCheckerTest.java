@@ -1,6 +1,9 @@
 package com.centeropenmiddleware.semwidgets.snippets.relationCheck;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Set;
 import junit.framework.TestCase;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassExpressionParser;
@@ -21,8 +24,10 @@ public class RelationCheckerTest {
 	private ManchesterOWLSyntaxClassExpressionParser parser;
 
 	@Before
-	public void method() throws OWLOntologyCreationException {
-		this.checker = new RelationChecker(new File("resources/bank.owl"));
+	public void method() throws OWLOntologyCreationException, MalformedURLException, IOException, URISyntaxException {
+		// this.checker = new RelationChecker(new File("resources/bank.owl")); this.parser = this.checker.getParser();
+		this.checker = new RelationChecker();
+		this.checker.addOntology(new File("resources/bank.owl").toURI().toURL());
 		this.parser = this.checker.getParser();
 	}
 
