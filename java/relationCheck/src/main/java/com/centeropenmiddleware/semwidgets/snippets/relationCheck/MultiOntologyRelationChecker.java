@@ -56,8 +56,7 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 	public void addOntology(URL ontologyURL) throws IOException, OWLOntologyCreationException, URISyntaxException {
 		if (this.ontologiesUsed.containsKey(ontologyURL))
 			return;
-		OWLOntology partRes = this.ontologyManager.loadOntology(IRI.create(ontologyURL));
-		this.ontologiesUsed.put(ontologyURL, partRes);
+		this.ontologiesUsed.put(ontologyURL, this.ontologyManager.loadOntology(IRI.create(ontologyURL)));
 		this.updateReasoner();
 	}
 
