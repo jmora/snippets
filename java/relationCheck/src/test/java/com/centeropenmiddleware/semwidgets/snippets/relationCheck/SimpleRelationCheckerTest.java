@@ -23,7 +23,6 @@ public class SimpleRelationCheckerTest {
 
 	@Before
 	public void method() throws OWLOntologyCreationException, MalformedURLException, IOException, URISyntaxException {
-		// this.checker = new RelationChecker(new File("resources/bank.owl")); this.parser = this.checker.getParser();
 		this.singleChecker = new SingleOntologyRelationChecker(new File("resources/bank.owl"));
 		this.multiChecker = new MultiOntologyRelationChecker();
 		this.multiChecker.addOntology(new File("resources/bank.owl").toURI().toURL());

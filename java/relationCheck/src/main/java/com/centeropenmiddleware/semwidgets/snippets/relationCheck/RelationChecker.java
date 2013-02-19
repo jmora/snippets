@@ -41,6 +41,11 @@ public abstract class RelationChecker {
 		return this.reasoner.getDisjointClasses(candidate).getFlattened();
 	}
 
+	public Set<OWLClass> containerConcepts(String classExpressionString) throws ParserException {
+		OWLClassExpression candidate = this.getCandidate("hasPart some (" + classExpressionString + ")");
+		return this.reasoner.getSubClasses(candidate, false).getFlattened();
+	}
+
 	private OWLClassExpression getCandidate(String classExpressionString) throws ParserException {
 		try {
 			return this.parser.parse(classExpressionString);
