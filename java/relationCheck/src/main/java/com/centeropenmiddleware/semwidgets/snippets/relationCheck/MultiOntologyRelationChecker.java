@@ -3,6 +3,7 @@ package com.centeropenmiddleware.semwidgets.snippets.relationCheck;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassExpressionParser;
@@ -31,12 +32,23 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 	private HashMap<URL, OWLOntology> ontologiesUsed;
 
 	public MultiOntologyRelationChecker() throws OWLOntologyCreationException {
+		this.init();
+		this.updateReasoner();
+	}
+
+	public MultiOntologyRelationChecker(Collection<URL> ontologyURLs) throws OWLOntologyCreationException, URISyntaxException {
+		this.init();
+		for (URL ontologyURL : ontologyURLs)
+			this.ontologiesUsed.put(ontologyURL, this.ontologyManager.loadOntology(IRI.create(ontologyURL)));
+		this.updateReasoner();
+	}
+
+	private void init() throws OWLOntologyCreationException {
 		this.ontologyManager = OWLManager.createOWLOntologyManager();
 		this.mergedIRI = IRI.create("http://centeropenmiddleware.com/semwidgets/merged");
 		this.factory = this.ontologyManager.getOWLDataFactory();
 		this.ontologyMerger = new OWLOntologyMerger(this.ontologyManager);
 		this.mergedOntology = this.ontologyMerger.createMergedOntology(this.ontologyManager, this.mergedIRI);
-		this.updateReasoner();
 		this.ontologiesUsed = new HashMap<URL, OWLOntology>();
 	}
 
@@ -67,4 +79,5 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 		this.ontologiesUsed.remove(ontologyURL);
 		this.updateReasoner();
 	}
+
 }

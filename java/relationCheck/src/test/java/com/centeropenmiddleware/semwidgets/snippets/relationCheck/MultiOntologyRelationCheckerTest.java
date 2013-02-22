@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Set;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -120,6 +122,35 @@ public class MultiOntologyRelationCheckerTest {
 		TestCase.assertTrue(disjoint.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#D>")));
 		Set<OWLClass> equivalent = this.multiChecker.equivalentConcepts("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testCollisions#B>");
 		TestCase.assertTrue(equivalent.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testCollisions#D>")));
+	}
+
+	@Test
+	public void testReloadDisjointCollision() throws OWLOntologyCreationException, MalformedURLException, IOException, URISyntaxException, ParserException {
+		ArrayList<URL> ontologies = new ArrayList<URL>();
+		ontologies.add(new File("resources/testCollisions.owl").toURI().toURL());
+		ontologies.add(new File("resources/testNames.owl").toURI().toURL());
+		ontologies.add(new File("resources/testRelations.owl").toURI().toURL());
+		this.multiChecker = new MultiOntologyRelationChecker(ontologies);
+		Set<OWLClass> disjoint = this.multiChecker.disjointConcepts("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#B>");
+		TestCase.assertTrue(disjoint.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#D>")));
+		Set<OWLClass> equivalent = this.multiChecker.equivalentConcepts("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testCollisions#B>");
+		TestCase.assertTrue(equivalent.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testCollisions#D>")));
+	}
+
+	@Test
+	public void testReloadSubsumedCollision() throws OWLOntologyCreationException, MalformedURLException, IOException, URISyntaxException, ParserException {
+		ArrayList<URL> ontologies = new ArrayList<URL>();
+		ontologies.add(new File("resources/testCollisions.owl").toURI().toURL());
+		ontologies.add(new File("resources/testNames.owl").toURI().toURL());
+		this.multiChecker = new MultiOntologyRelationChecker(ontologies);
+		Set<OWLClass> subsumed = this.multiChecker.subsumedConcepts("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#A>");
+		TestCase.assertTrue(subsumed.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#B>")));
+		Set<OWLClass> equivalent = this.multiChecker.equivalentConcepts("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testCollisions#B>");
+		TestCase.assertTrue(equivalent.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testCollisions#D>")));
+		subsumed = this.multiChecker.subsumedConcepts("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#A>");
+		TestCase.assertFalse(subsumed.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testCollisions#D>")));
+		subsumed = this.multiChecker.subsumedConcepts("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#A>");
+		TestCase.assertFalse(subsumed.contains(this.multiChecker.parse("<http://www.centeropenmiddleware.com/ontology/tests/jmora/testNames#D>")));
 	}
 
 }
