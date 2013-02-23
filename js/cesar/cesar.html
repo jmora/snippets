@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Cesar coder and decoder</title>
+	<script src="cesar.js"></script>
+	<link rel="stylesheet" href="cesar.css">
+</head>
+<body>
+	<p>This is a really simple Caesar conversor, write a number as the key and type on the box corresponding to your text.</p>
+	<div>
+		<div>
+			Original Text.<br/>
+			<textarea cols="40" rows="10" id="original" oninput='getNSet(false)'></textarea>
+		</div>
+		<div>
+			Key<br/>
+			<textarea cols="3" rows="1" id="displacement" oninput='getNSet(false)')>1</textarea>
+		</div>
+		<div>
+			Encoded text.<br/>
+			<textarea cols="40" rows="10" id="encoded" oninput='getNSet(true)'></textarea>
+		</div>
+	</div>
+	<p>Feel free to check the <a href="http://www.solveet.com/exercises/Cifrado-Cesar/145"></a>original (Spanish) description</a> of the exercise.</p>
+</body>
+</html>
