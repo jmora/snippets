@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Pomodoro</title>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+	<script src="pomodoro.js"></script>
+	<link rel="stylesheet" href="pomodoro.css">
+	<!-- I'd have liked to do something like this: http://www.appszoom.com/android_applications/tools/steampunk-chronometer_cymmi.html
+	but that would take too long ... -->
+</head>
+<body>
+
+<div id="mainContainer">
+	<div id="pomodoro">
+	  <div class="title">POMODORO</div>
+	  <table>
+	  	<tr>
+		  <td>Initial time:</td>
+		  <td><input type="text" name="timeStart" value="25:00"></td>
+	  	</tr>
+	  	<tr>
+		  <td>Remaining time:</td>
+		  <td><input type="text" name="remainingTime"></td>
+	  	</tr>
+	  	<tr>
+		  <td>Current count:</td>
+		  <td><input type="text" name="count"></td>
+	  	</tr>
+	  	<tr>
+		  <td><div class="button" id="start">start</div></td>
+		  <td><div class="button" id="count">count</div</td>
+	  	</tr>
+	  </table>
+	</div>
+</div>
+</body>
+</html>
