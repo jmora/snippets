@@ -14,7 +14,7 @@ def uriGenerator():
     count += 1
  
 def generateWidget(ug, names):
-  semanticTypes = ['account', 'creditCard', 'person', 'e-mail']
+  semanticTypes = ['Compra', 'CompraEnEuros', 'CompraEnDolares', 'CompraVuelo', 'CompraVueloEnDolares', 'CompraVueloEnEuros']
   types = ['input', 'output']
   widget = []
   for i in range(rd.randint(3,7)):
@@ -28,17 +28,22 @@ def generateWidget(ug, names):
  
 if __name__ == "__main__":
   ug = uriGenerator()
-  base = "http://linkeddata4.dia.fi.upm.es:8080/MatcherService/rest/matcher/matchingsSpace/"
+  base = "http://linkeddata4.dia.fi.upm.es:8080/MatcherService/rest/semanticmatcher/matchingsSpace/"
   id = "matcherCallTest"
+  printf(jsonCall('DELETE', base+id))
   printf(jsonCall('PUT', base+id))
   printf(jsonCall('GET', base+id))
   names = {'flow':'flow', 'semanticType':'semanticType', 'name':'id', 'syntacticType':'syntacticType'}
-  for i in range(10):
+  posts = []
+  gets = []
+  for i in range(20):
     #data = {'ontologies': [], 'operation':'addition', 'fields':generateWidget(ug, names)}
-    data = {'ontologies': [], 'type':'addition', 'fields':generateWidget(ug, names)}    
-    printf(jsonCall('POST', base+id, data))
-    printf(jsonCall('GET', base+id))
-    
-    
-  
-  
+    data = {'ontologies': ['https://raw.github.com/jmora/snippets/master/java/relationCheck/resources/flights.owl'], 'type':'addition', 'fields':generateWidget(ug, names)}    
+    posts.append(jsonCall('POST', base+id, data))
+    gets.append(jsonCall('GET', base+id))
+  pg = None
+  for i in range(len(posts)):
+    print(posts[i])
+    print(gets[i])
+    if i and len(gets[i][1]['matchings']) == len(gets[i-1][1]['matchings']):
+      print('MAL ASUNTO ^^')
