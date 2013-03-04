@@ -43,7 +43,7 @@ if __name__ == "__main__":
     gets.append(jsonCall('GET', base+id))
   pg = None
   for i in range(len(posts)):
-    print(posts[i])
-    print(gets[i])
+    printf(posts[i])
+    printf(gets[i])
     if i and len(gets[i][1]['matchings']) == len(gets[i-1][1]['matchings']):
-      print('MAL ASUNTO ^^')
+      print('The service is not fast enough in the updates, queueing petitions may be a good idea. \n\n\n\n\n\n\n\n')
