@@ -8,7 +8,7 @@ import org.junit.runners.Suite;
  * Unit test for RelationChecker.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ SimpleRelationCheckerTest.class, MultiOntologyRelationCheckerTest.class, MereologyCheckerTest.class })
+@Suite.SuiteClasses({ SimpleRelationCheckerTest.class, MultiOntologyRelationCheckerTest.class, MereologyCheckerTest.class, EquivalencesTest.class })
 public class RelationCheckerTest {
 
 }

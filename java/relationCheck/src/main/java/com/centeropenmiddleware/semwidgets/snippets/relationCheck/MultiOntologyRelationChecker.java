@@ -6,17 +6,23 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassExpressionParser;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
+import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.expression.ShortFormEntityChecker;
+import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
+import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.util.OWLOntologyMerger;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxPrefixNameShortFormProvider;
@@ -30,6 +36,8 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 	private OWLOntologyManager ontologyManager;
 	private OWLDataFactory factory;
 	private HashMap<URL, OWLOntology> ontologiesUsed;
+	private OWLOntology expressionEquivalences;
+	private IRI eqIRI;
 
 	public MultiOntologyRelationChecker() throws OWLOntologyCreationException {
 		this.init();
@@ -44,8 +52,10 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 	}
 
 	private void init() throws OWLOntologyCreationException {
+		this.eqIRI = IRI.create("http://centeropenmiddleware.com/semwidgets/eqs/");
+		this.mergedIRI = IRI.create("http://centeropenmiddleware.com/semwidgets/merged/");
 		this.ontologyManager = OWLManager.createOWLOntologyManager();
-		this.mergedIRI = IRI.create("http://centeropenmiddleware.com/semwidgets/merged");
+		this.expressionEquivalences = this.ontologyManager.createOntology(this.eqIRI);
 		this.factory = this.ontologyManager.getOWLDataFactory();
 		this.ontologyMerger = new OWLOntologyMerger(this.ontologyManager);
 		this.mergedOntology = this.ontologyMerger.createMergedOntology(this.ontologyManager, this.mergedIRI);
@@ -72,7 +82,7 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 		this.updateReasoner();
 	}
 
-	public void removeOntology(URL ontologyURL) throws OWLOntologyCreationException, URISyntaxException {
+	public void removeOntology(URL ontologyURL) throws OWLOntologyCreationException {
 		if (!this.ontologiesUsed.containsKey(ontologyURL))
 			return;
 		this.ontologyManager.removeOntology(this.ontologiesUsed.get(ontologyURL));
@@ -80,4 +90,38 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 		this.updateReasoner();
 	}
 
+	public void addEquivalences(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
+		this.ontologyManager.applyChange(new AddAxiom(this.expressionEquivalences, this.factory.getOWLEquivalentClassesAxiom(this
+				.parseAddAll(equivalentConcepts))));
+		this.updateReasoner();
+	}
+
+	public void removeEquivalences(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
+		this.ontologyManager.applyChange(new RemoveAxiom(this.expressionEquivalences, this.factory.getOWLEquivalentClassesAxiom(this
+				.parseAddAll(equivalentConcepts))));
+		this.updateReasoner();
+	}
+
+	public void purgeAuxiliarConcepts(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
+		for (String classString : equivalentConcepts) {
+			OWLClassExpression classOWL = this.factory.getOWLClass(classString, new DefaultPrefixManager(this.eqIRI.toString()));
+			this.ontologyManager.applyChange(new RemoveAxiom(this.expressionEquivalences, this.factory.getOWLDeclarationAxiom(classOWL.asOWLClass())));
+		}
+		this.updateReasoner();
+	}
+
+	private HashSet<OWLClassExpression> parseAddAll(Collection<String> equivalentConcepts) {
+		HashSet<OWLClassExpression> result = new HashSet<OWLClassExpression>();
+		for (String classString : equivalentConcepts) {
+			OWLClassExpression classOWL;
+			try {
+				classOWL = this.parse(classString);
+			} catch (ParserException e) {
+				classOWL = this.factory.getOWLClass(classString, new DefaultPrefixManager(this.eqIRI.toString()));
+				this.ontologyManager.applyChange(new AddAxiom(this.expressionEquivalences, this.factory.getOWLDeclarationAxiom(classOWL.asOWLClass())));
+			}
+			result.add(classOWL);
+		}
+		return result;
+	}
 }
