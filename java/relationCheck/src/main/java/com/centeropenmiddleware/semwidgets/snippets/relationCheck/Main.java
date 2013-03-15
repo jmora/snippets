@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
+import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxPrefixNameShortFormProvider;
 
 
 /**
@@ -20,13 +21,13 @@ public class Main {
 		System.out.println("I'm going to do some things, don't mind me.");
 		MultiOntologyRelationChecker rc = new MultiOntologyRelationChecker();
 		rc.addOntology(new File("resources/testNames.owl").toURI().toURL());
-		new DefaultPrefixManager();
+		ManchesterOWLSyntaxPrefixNameShortFormProvider dpm = new ManchesterOWLSyntaxPrefixNameShortFormProvider(new DefaultPrefixManager());
 		SimpleShortFormProvider ssfp = new SimpleShortFormProvider();
 
 		System.out.println("\nSubsumed!");
 		try {
 			for (OWLClass c : rc.subsumedConcepts("A"))
-				System.out.println(ssfp.getShortForm(c));
+				System.out.println(dpm.getShortForm(c));
 		} catch (ParserException e) {
 			System.err.println(e.getMessage());
 		}
