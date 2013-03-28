@@ -36,14 +36,16 @@ if __name__ == "__main__":
   names = {'flow':'flow', 'semanticType':'semanticType', 'name':'id', 'syntacticType':'syntacticType'}
   posts = []
   gets = []
+  # This should NOT be this way:
+  printf(jsonCall('POST', base+id, data = {'ontologies': ['https://raw.github.com/jmora/snippets/master/java/relationCheck/resources/flights.owl'], 'type':'addition', 'fields':[]}))
   for i in range(20):
     #data = {'ontologies': [], 'operation':'addition', 'fields':generateWidget(ug, names)}
-    data = {'ontologies': ['https://raw.github.com/jmora/snippets/master/java/relationCheck/resources/flights.owl'], 'type':'addition', 'fields':generateWidget(ug, names)}    
+    data = {'ontologies': [], 'type':'addition', 'fields':generateWidget(ug, names)}    
     posts.append(jsonCall('POST', base+id, data))
     gets.append(jsonCall('GET', base+id))
   pg = None
   for i in range(len(posts)):
-    printf(posts[i])
-    printf(gets[i])
+    #printf(posts[i])
+    #printf(gets[i])
     if i and len(gets[i][1]['matchings']) == len(gets[i-1][1]['matchings']):
       print('The service is not fast enough in the updates, queueing petitions may be a good idea. \n\n\n\n\n\n\n\n')

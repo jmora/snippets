@@ -25,15 +25,41 @@
           calln ++;
           if (params == null)
             params = [];
+          params = JSON.stringify(params);
           $('#results').append('<div id="jc' + calln + '"><h1 class="call"> Call #'+ calln + '</h1></div>');
           printf('verb: ' + verb + '<br/>url: ' + address + '<br/>params: ' + params, calln);
-          return $.ajax({url: address, type: verb, data: params, dataType: 'json', success: succgen(calln), error: errgen(calln)});
+          return $.ajax({
+            headers: { 
+              'Accept': 'application/json',
+              'Content-Type': 'application/json' 
+            },
+            url: address,
+            type: verb,
+            data: params,
+            dataType: 'json', 
+            success: succgen(calln), 
+            error: errgen(calln)});
         }
         // here you write the calls that you want to try
-        jsonCall("PUT", 'http://example.com');
-        jsonCall("GET", 'http://example.com');
-        jsonCall("POST", 'http://example.com', []);
-        jsonCall("DELETE", 'http://example.com');
+        var postData2 = {
+          'fields': [
+            {'semanticType': 'CompraVueloEnDolares', 'syntacticType': 'text', 'flow': 'input', 'id': 'dq'},
+            {'semanticType': 'CompraVuelo', 'syntacticType': 'text', 'flow': 'output', 'id': 'dr'},
+            {'semanticType': 'CompraVuelo', 'syntacticType': 'text', 'flow': 'input', 'id': 'ds'},
+            {'semanticType': 'CompraVuelo', 'syntacticType': 'text', 'flow': 'input', 'id': 'dt'}],
+          'type': 'addition',
+          'ontologies': []
+        };
+        var postData1 = {
+          'fields': [],
+          'type': 'addition',
+          'ontologies': ['https://raw.github.com/jmora/snippets/master/java/relationCheck/resources/flights.owl']
+        };
+        jsonCall("PUT", 'http://linkeddata4.dia.fi.upm.es:8080/MatcherService/rest/semanticmatcher/matchingsSpace/matcherCallTest');
+        jsonCall("POST", 'http://linkeddata4.dia.fi.upm.es:8080/MatcherService/rest/semanticmatcher/matchingsSpace/matcherCallTest', postData1);
+        jsonCall("POST", 'http://linkeddata4.dia.fi.upm.es:8080/MatcherService/rest/semanticmatcher/matchingsSpace/matcherCallTest', postData2);
+        jsonCall("GET", 'http://linkeddata4.dia.fi.upm.es:8080/MatcherService/rest/semanticmatcher/matchingsSpace/matcherCallTest');
+        jsonCall("DELETE", 'http://linkeddata4.dia.fi.upm.es:8080/MatcherService/rest/semanticmatcher/matchingsSpace/matcherCallTest');
       });
     </script>
   </head>
