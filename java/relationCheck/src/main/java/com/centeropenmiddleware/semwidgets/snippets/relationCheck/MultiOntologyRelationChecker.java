@@ -137,9 +137,9 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 			return result;
 		for (OWLClass r : this.equivalentConcepts(classExpressionString))
 			return r;
-		this.addEquivalences(Arrays.asList(classExpressionString, MultiOntologyRelationChecker.auxConceptName + this.auxiliarConcepts.toString()));
 		this.auxiliarConcepts++;
-		return result;
+		this.addEquivalences(Arrays.asList(classExpressionString, MultiOntologyRelationChecker.auxConceptName + this.auxiliarConcepts.toString()));
+		return this.getCandidate(MultiOntologyRelationChecker.auxConceptName + this.auxiliarConcepts.toString());
 	}
 
 }
