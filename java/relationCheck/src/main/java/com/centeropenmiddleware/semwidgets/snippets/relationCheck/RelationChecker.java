@@ -46,7 +46,7 @@ public abstract class RelationChecker {
 		return this.reasoner.getSubClasses(candidate, false).getFlattened();
 	}
 
-	private OWLClassExpression getCandidate(String classExpressionString) throws ParserException {
+	protected OWLClassExpression getCandidate(String classExpressionString) throws ParserException {
 		try {
 			return this.parser.parse(classExpressionString);
 		} catch (ParserException e) {

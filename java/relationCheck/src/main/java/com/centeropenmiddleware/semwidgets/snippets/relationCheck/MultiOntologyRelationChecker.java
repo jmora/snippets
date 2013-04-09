@@ -3,6 +3,7 @@ package com.centeropenmiddleware.semwidgets.snippets.relationCheck;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.expression.ShortFormEntityChecker;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -38,6 +40,8 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 	private HashMap<URL, OWLOntology> ontologiesUsed;
 	private OWLOntology expressionEquivalences;
 	private IRI eqIRI;
+	private Integer auxiliarConcepts;
+	private static String auxConceptName = "auxConceptNameAddedForEquivalenceAndExpressionHandling";
 
 	public MultiOntologyRelationChecker() throws OWLOntologyCreationException {
 		this.init();
@@ -52,6 +56,7 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 	}
 
 	private void init() throws OWLOntologyCreationException {
+		this.auxiliarConcepts = 0;
 		this.eqIRI = IRI.create("http://centeropenmiddleware.com/semwidgets/eqs/");
 		this.mergedIRI = IRI.create("http://centeropenmiddleware.com/semwidgets/merged/");
 		this.ontologyManager = OWLManager.createOWLOntologyManager();
@@ -90,19 +95,19 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 		this.updateReasoner();
 	}
 
-	public void addEquivalences(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
+	protected void addEquivalences(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
 		this.ontologyManager.applyChange(new AddAxiom(this.expressionEquivalences, this.factory.getOWLEquivalentClassesAxiom(this
 				.parseAddAll(equivalentConcepts))));
 		this.updateReasoner();
 	}
 
-	public void removeEquivalences(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
+	protected void removeEquivalences(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
 		this.ontologyManager.applyChange(new RemoveAxiom(this.expressionEquivalences, this.factory.getOWLEquivalentClassesAxiom(this
 				.parseAddAll(equivalentConcepts))));
 		this.updateReasoner();
 	}
 
-	public void purgeAuxiliarConcepts(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
+	protected void purgeAuxiliarConcepts(Collection<String> equivalentConcepts) throws OWLOntologyCreationException {
 		for (String classString : equivalentConcepts) {
 			OWLClassExpression classOWL = this.factory.getOWLClass(classString, new DefaultPrefixManager(this.eqIRI.toString()));
 			this.ontologyManager.applyChange(new RemoveAxiom(this.expressionEquivalences, this.factory.getOWLDeclarationAxiom(classOWL.asOWLClass())));
@@ -124,4 +129,17 @@ public class MultiOntologyRelationChecker extends RelationChecker {
 		}
 		return result;
 	}
+
+	// FIXME: creating a new object is strongly advised when "many" changes to active ontologies are made to keep the number of memory leaks low
+	public OWLClassExpression getNamedCandidate(String classExpressionString) throws ParserException, OWLOntologyCreationException {
+		OWLClassExpression result = this.getCandidate(classExpressionString);
+		if (!result.isAnonymous())
+			return result;
+		for (OWLClass r : this.equivalentConcepts(classExpressionString))
+			return r;
+		this.addEquivalences(Arrays.asList(classExpressionString, MultiOntologyRelationChecker.auxConceptName + this.auxiliarConcepts.toString()));
+		this.auxiliarConcepts++;
+		return result;
+	}
+
 }
