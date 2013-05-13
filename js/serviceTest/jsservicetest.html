@@ -12,7 +12,7 @@
           $('#jc'+n).append(("<p>" + s + "</p>"));
         }
         function jqXHRprinter(jqXHR, n){ // nice factorization, if I may say so
-          printf(jqXHR.statusText + ' ' + jqXHR.status, n);
+          printf(JSON.stringify(jqXHR.statusText) + ' ' + JSON.stringify(jqXHR.status), n);
           printf(jqXHR.responseText, n);
         }
         function succgen(n){ // parameter games
@@ -21,14 +21,16 @@
         function errgen(n){ // currification could actually help here
           return function (a,b,c){jqXHRprinter(a, n);};
         }
+        var delay = 0;
         function jsonCall(verb, address, params){
           calln ++;
+          delay += 1500;
           if (params == null)
-            params = [];
+            params = []
           params = JSON.stringify(params);
           $('#results').append('<div id="jc' + calln + '"><h1 class="call"> Call #'+ calln + '</h1></div>');
           printf('verb: ' + verb + '<br/>url: ' + address + '<br/>params: ' + params, calln);
-          return $.ajax({
+          window.setTimeout($.ajax, delay, {
             headers: { 
               'Accept': 'application/json',
               'Content-Type': 'application/json' 
@@ -40,7 +42,7 @@
             success: succgen(calln), 
             error: errgen(calln)});
         }
-        // here you write the calls that you want to try
+        // here you write the calls that you want to try (with their data, long data)
         var postData2 = {
           'fields': [
             {'semanticType': 'CompraVueloEnDolares', 'syntacticType': 'text', 'flow': 'input', 'id': 'dq'},
@@ -49,7 +51,7 @@
             {'semanticType': 'CompraVuelo', 'syntacticType': 'text', 'flow': 'input', 'id': 'dt'}],
           'type': 'addition',
           'ontologies': []
-        };
+        };        
         var postData1 = {
           'fields': [],
           'type': 'addition',
