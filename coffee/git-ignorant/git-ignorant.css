@@ -1,0 +1,32 @@
+@charset "utf-8";
+/* CSS Document */
+pre {
+	font-family: Consolas, 'Liberation Mono', Courier, monospace;
+}
+.result {
+	font-size: 80%;
+}
+.category{
+	font-size: 100%;
+}
+.hidden{
+  display: none;
+}
+.option {
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	margin: 3px;
+	padding: 1px;
+}
+.selected {
+	background-color:#ADD;
+}
+#results {
+	border: 1px dashed #ccc;
+	padding: 5px;
+}
+#container {
+	margin-left: 100px;
+	width: 800px;
+}
+
