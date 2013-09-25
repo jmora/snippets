@@ -1,5 +1,5 @@
 import json as js
-import http.client
+import httplib
 
 def jsonCall(verb, url, data=None):
   print ("%s on %s with %s"%(verb, url, data))
@@ -15,7 +15,7 @@ def jsonCall(verb, url, data=None):
   headers = {'Content-Type': 'application/json'}
   (baseurl, extendedurl) = url.split('/', 1)
   extendedurl = '/' + extendedurl
-  conn = http.client.HTTPConnection(baseurl) if not safe else http.client.HTTPSConnection(baseurl)
+  conn = httplib.HTTPConnection(baseurl) if not safe else httplib.HTTPSConnection(baseurl)
   if (data is None):
     conn.request(verb, extendedurl, headers=headers)
   else:
