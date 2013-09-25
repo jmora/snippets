@@ -17,6 +17,8 @@ pre {
 	border-radius: 15px;
 	margin: 3px;
 	padding: 1px;
+	cursor: hand;
+	cursor: pointer;
 }
 .selected {
 	background-color:#ADD;

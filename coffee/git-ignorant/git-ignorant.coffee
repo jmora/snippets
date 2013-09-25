@@ -15,7 +15,7 @@ for category of data
 	$('#results').append "<div id='r#{category}' class='category'><pre># #{category}</pre></div>"
 	for technology of data[category]
 		$('#' + category).append "<span id='#{technology}' class='option'>#{technology}</span>"
-		lines = data[category][technology].reduce (x, y) -> "#{x}\n" + y
+		lines = data[category][technology].reduce (x, y) -> x + '\n' + y
 		$('#r' + category).append "<pre id='#{'r' + technology}' class='hidden result'># #{technology}\n#{lines}</pre>"
 
 toggleOption = () ->
