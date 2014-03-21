@@ -44,3 +44,4 @@ build.log
 *.jar
 catalog-v001.xml
 .cache
+bibextract.conf
