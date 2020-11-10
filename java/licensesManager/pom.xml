@@ -4,12 +4,12 @@
   <artifactId>snippets.lmanager</artifactId>
   <version>0.0.1</version>
   <repositories>
-    <repository> 
+    <repository>
       <id>berkeleybop</id>
       <name>berkeleybop Repository</name>
       <url>http://code.berkeleybop.org/maven/repository</url>
     </repository>
-  </repositories>  
+  </repositories>
   <dependencies>
     <dependency>
             <groupId>org.semanticweb</groupId>
@@ -19,7 +19,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>[3.8.1,]</version>
+      <version>[4.13.1,]</version>
       <scope>test</scope>
     </dependency>
     <dependency>
